@@ -1,8 +1,9 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Union
 
-from beets.library import Item, LibModel, Library
+from beets.library import LibModel, Library
 from beets.ui import commands
 from flask import Flask
+from flask_cors import CORS
 
 beets_library = Library(
     path="/home/griff/Downloads/test_library_path",
@@ -10,10 +11,11 @@ beets_library = Library(
 )
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = "7dcbc0cdd9fb2339588460bb3ab7f0241e7cbfbcfe8a679666232d9bf869a975"
 
-track_fields = ["id", "album", "artist", "track", "year"]
-album_fields = ["id", "albumartist", "genre", "day", "month", "year", "added"]
+track_fields = ["id", "title", "album", "artist", "track", "year"]
+album_fields = ["id", "album", "albumartist", "genre", "day", "month", "year", "added"]
 
 
 def library_model_to_json(
