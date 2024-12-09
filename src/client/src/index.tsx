@@ -6,7 +6,7 @@ import Search from './components/Search';
 import SearchResultTable from './components/SearchResults';
 
 const App: React.FC = () => {
-    const [searchType, setSearchType] = useState<string>("tracks");
+    const [searchType, setSearchType] = useState<SearchType>("tracks");
     const [searchResults, setSearchResults] = useState<SearchResults | undefined>(undefined);
     return (
         <>

@@ -2,13 +2,9 @@ import React, {useState} from 'react';
 import { SearchType } from '../types';
 
 interface SearchProps {
-    searchType: string;
+    searchType: SearchType;
     setSearchType: Function;
     setSearchResults: Function;
-}
-
-function isValidSearchType(value: string): value is SearchType {
-    return ["tracks", "albums"].includes(value);
 }
 
 const Search: React.FC<SearchProps> = ({ searchType, setSearchType, setSearchResults }: SearchProps) => {
@@ -20,9 +16,7 @@ const Search: React.FC<SearchProps> = ({ searchType, setSearchType, setSearchRes
 
     const handleSearchTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         event.preventDefault();
-        if(isValidSearchType(event.target.value)) {
-            setSearchType(event.target.value);
-        }
+        setSearchType(event.target.value);
     }
 
     const onFormSubmit = async (event: React.FormEvent<HTMLElement>) => {
