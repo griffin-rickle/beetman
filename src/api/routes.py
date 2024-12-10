@@ -46,22 +46,31 @@ def library_model_to_json(
 # It's already written so why not?
 # https://beets.readthedocs.io/en/stable/reference/query.html
 # https://github.com/beetbox/beets/blob/master/beets/ui/commands.py
-@app.route("/tracks/<track_name>", methods=["GET"])
-def query_track(track_name: str) -> Dict[str, Any]:
+# @app.route("/tracks/<track_id>", methods=["GET"])
+# def query_track(track_name: str) -> Dict[str, Any]:
+#     return {
+#         "result": [
+#             library_model_to_json(item, track_fields)
+#             # pylint:disable=protected-access
+#             for item in commands._do_query(
+#                 beets_library, f"title:{track_name}", False, also_items=False
+#             )[0]
+#         ]
+#     }
+
+
+@app.route("/tracks/<track_id>", methods=["GET"])
+def get_track(track_id: int) -> Dict[str, Any]:
     return {
         "result": [
-            library_model_to_json(item, track_fields)
-            # pylint:disable=protected-access
-            for item in commands._do_query(
-                beets_library, f"title:{track_name}", False, also_items=False
-            )[0]
+            library_model_to_json(beets_library.get_item(track_id), track_fields)
         ]
     }
 
 
-@app.route("/track/<track_id>", methods=["GET"])
-def get_track(track_id: int) -> Dict[str, Any]:
-    return library_model_to_json(beets_library.get_item(track_id), track_fields)
+@app.route("/tracks/<track_id>", methods=["POST"])
+def update_track(track_id: int) -> Dict[str, int]:
+    return {"status_code": 200}
 
 
 @app.route("/albums/<album_name>", methods=["GET"])
@@ -77,11 +86,11 @@ def query_album(album_name: str) -> Dict[str, Any]:
     }
 
 
-@app.route("/album/{<album_id>/tracks", method=["GET"])
-def get_album_tracks(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
-    return {
-        "results": [
-            library_model_to_json(item, track_fields)
-            for item in beets_library.get_album(album_id).items()
-        ]
-    }
+# @app.route("/album/{<album_id>/tracks", method=["GET"])
+# def get_album_tracks(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
+#     return {
+#         "results": [
+#             library_model_to_json(item, track_fields)
+#             for item in beets_library.get_album(album_id).items()
+#         ]
+#     }

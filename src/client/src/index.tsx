@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { LibraryItem, SearchResults, SearchType } from './types'
-import Search from './components/Search';
-import SearchResultTable from './components/SearchResults';
+import SearchPage from './pages/Search';
+import AlbumPage from './pages/AlbumPage';
+import TrackPage from './pages/TrackPage';
 
-const App: React.FC = () => {
-    const [searchType, setSearchType] = useState<SearchType>("tracks");
-    const [searchResults, setSearchResults] = useState<SearchResults | undefined>(undefined);
-    return (
-        <>
-            <h1>Welcome to the shittiest app you've ever used!</h1>
-            <Search searchType={searchType} setSearchType={setSearchType} setSearchResults={setSearchResults}/>
-            <SearchResultTable searchType={searchType} searchResults={searchResults} />
-        </>
-    );
-};
+import {BrowserRouter, Routes, Route} from 'react-router';
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+// TODO: Put React Router in here. Move what's currently in here to a Search component. Set up routes for search and edit pages.
+const root = document.getElementById('root') as HTMLElement;
 
-root.render(<App />);
-
+ReactDOM.createRoot(root).render(
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<SearchPage />}/>
+            <Route path="/tracks/:trackId" element={<TrackPage />} />
+            <Route path="/albums/:albumId" element={<AlbumPage />} />
+        </Routes>
+    </BrowserRouter>
+);

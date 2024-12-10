@@ -29,27 +29,27 @@ const getTable = (data: LibraryItem[], searchType: SearchType) => {
         getCoreRowModel: getCoreRowModel()
     });
 }
-
-interface LibraryItemProps {
-    row_id: number;
-    id: number;
-    artist: string;
-    title: string;
-    year: number;
-    itemType: SearchType
-}
-
-const LibraryItemRow: React.FC<LibraryItemProps> = (item: LibraryItemProps) => {
-    const { row_id, id, artist, title, year } = item;
-    return (
-        <tr key={row_id}>
-            <td>{id}</td>
-            <td>{artist}</td>
-            <td><a href={`/album/${id}`}>{title}</a></td>
-            <td>{year}</td>
-        </tr>
-    )
-}
+//
+//interface LibraryItemProps {
+//    row_id: number;
+//    id: number;
+//    artist: string;
+//    title: string;
+//    year: number;
+//    itemType: SearchType
+//}
+//
+//const LibraryItemRow: React.FC<LibraryItemProps> = (item: LibraryItemProps) => {
+//    const { row_id, id, artist, title, year } = item;
+//    return (
+//        <tr key={row_id}>
+//            <td>{id}</td>
+//            <td>{artist}</td>
+//            <td><a href={`/album/${id}`}>{title}</a></td>
+//            <td>{year}</td>
+//        </tr>
+//    )
+//}
 
 const SearchResultTable: React.FC<SearchResultsProps> = ({ searchType, searchResults }: SearchResultsProps) => {
     if (!searchResults) {
@@ -84,9 +84,6 @@ const SearchResultTable: React.FC<SearchResultsProps> = ({ searchType, searchRes
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
-                  <td>
-                    <button>Save</button>
-                  </td>
                 </tr>
               ))}
             </tbody>

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { search } from '../api';
 import { SearchType } from '../types';
 
 interface SearchProps {
@@ -7,7 +8,7 @@ interface SearchProps {
     setSearchResults: Function;
 }
 
-const Search: React.FC<SearchProps> = ({ searchType, setSearchType, setSearchResults }: SearchProps) => {
+const SearchBar: React.FC<SearchProps> = ({ searchType, setSearchType, setSearchResults }: SearchProps) => {
     const [searchInput, setSearchInput] = useState<string>("");
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -21,13 +22,7 @@ const Search: React.FC<SearchProps> = ({ searchType, setSearchType, setSearchRes
 
     const onFormSubmit = async (event: React.FormEvent<HTMLElement>) => {
         event?.preventDefault();
-        try {
-            const response = await fetch(`http://127.0.0.1:5000/${searchType}/${searchInput}`);
-            const data = await response.json()
-            setSearchResults(data);
-        } catch (error) {
-
-        }
+        setSearchResults(await search(searchType, searchInput));
     }
 
     return (
@@ -47,4 +42,4 @@ const Search: React.FC<SearchProps> = ({ searchType, setSearchType, setSearchRes
     )
 }
 
-export default Search;
+export default SearchBar;
