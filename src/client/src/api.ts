@@ -34,7 +34,20 @@ export async function getTrack (trackId: number): Promise<Track | undefined> {
     return undefined;
 }
 
+export async function getAlbum(albumId: number): Promise<Album | undefined> {
+    const results = await _get(`http://127.0.0.1:5000/album/${albumId}`);
+    if(results?.result && results?.result.length == 1) {
+        return results?.result[0] as Album;
+    }
+    console.error(`More than one album returned for id ${albumId}`);
+    return undefined;
+}
+
 interface UpdateResponse {}
 export async function updateTrack(trackId: number, track: Track): Promise<UpdateResponse> {
     return _post(`http://127.0.0.1:5000/tracks/${trackId.toString()}`, track);
+}
+
+export async function updateAlbum(albumId: number, album: Album): Promise<UpdateResponse> {
+    return _post(`http://127.0.0.1:5000/album/${albumId.toString()}`, album)
 }
