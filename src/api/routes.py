@@ -46,11 +46,10 @@ def library_model_to_json(
 
 @app.route("/tracks/<track_id>", methods=["GET"])
 def get_track(track_id: int) -> Dict[str, Any]:
-    track = beets_library.get_single_track(f"id:{track_id}")
+    track = beets_library.get_item(int(track_id))
     return {"result": [library_model_to_json(track, track_fields)]}
 
 
-# TODO: use library.get_item and library.get_album to get this stuff instead of commands!
 # Why does this not work if I update the album to Diotima-test?
 @app.route("/tracks/<track_id>", methods=["POST"])
 def update_track(track_id: int) -> Response:
@@ -58,7 +57,7 @@ def update_track(track_id: int) -> Response:
         item_updates = json.load(BytesIO(request.data))
     except Exception:
         return Response("An error occurred parsing request body", status=500)
-    track = beets_library.get_single_track(f"id:{track_id}")
+    track = beets_library.get_item(track_id)
     track.update({key: value for key, value in item_updates.items() if key != "id"})
     # Want the case where album doesn't exist here
     album_result = beets_library.get_albums(f"album:={track.album}")
@@ -108,11 +107,12 @@ def query_album(album_name: str) -> Dict[str, Any]:
 
 @app.route("/album/<album_id>", methods=["GET"])
 def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
-    album = beets_library.get_single_album(f"id:{album_id}")
-    return_value = library_model_to_json(album, album_fields)
-    return_value["tracks"] = [
+    album = beets_library.get_album(int(album_id))
+    return_value: Dict[str, Any] = library_model_to_json(album, album_fields)
+    track_info: List[Dict[str, str]] = [
         {k: track[k] for k in ["title", "id", "track"]} for track in album.items()
     ]
+    return_value["tracks"] = track_info
 
     return {"result": [return_value]}
 
