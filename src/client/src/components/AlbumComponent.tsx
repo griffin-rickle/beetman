@@ -13,7 +13,9 @@ const AlbumComponent: React.FC<AlbumComponentProps> = ({album, setAlbumInfo}: Al
     }
     return (
         <>
+            <h1>{album.albumartist} - {album.title}</h1>
             {Object.keys(album).map((key) => {
+                if(key === 'tracks') { return null }
                 return (
                     <>
                         <table>
@@ -25,6 +27,25 @@ const AlbumComponent: React.FC<AlbumComponentProps> = ({album, setAlbumInfo}: Al
                     </>
                 );
             })}
+            <h2>Tracks</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Track</td>
+                        <td>Title</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {album.tracks.map((track) => {
+                        return (
+                            <tr>
+                                <td>{track.track}</td>
+                                <td><a href={`/tracks/${track.id}`}>{track.title}</a></td>
+                            </tr>
+                        )
+                    })}
+                    </tbody>
+                </table>
         </>
     );
 };

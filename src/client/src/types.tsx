@@ -12,6 +12,7 @@ export interface Album extends LibraryItem {
     day: number;
     month: number;
     added: number;
+    tracks: Track[];
 }
 
 export interface Track extends LibraryItem {

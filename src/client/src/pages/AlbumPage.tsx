@@ -28,7 +28,6 @@ const AlbumPage: React.FC = () => {
 
     return (
         <>
-            <h1>Album Page</h1>
             {!!albumInfo ? <AlbumComponent album={albumInfo} setAlbumInfo={setAlbumInfo}/>: <h2>Loading</h2>}
             <button onClick={handleButtonClick}>Save</button>
         </>

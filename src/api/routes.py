@@ -50,6 +50,7 @@ def get_track(track_id: int) -> Dict[str, Any]:
     return {"result": [library_model_to_json(track, track_fields)]}
 
 
+# TODO: use library.get_item and library.get_album to get this stuff instead of commands!
 # Why does this not work if I update the album to Diotima-test?
 @app.route("/tracks/<track_id>", methods=["POST"])
 def update_track(track_id: int) -> Response:
@@ -108,7 +109,12 @@ def query_album(album_name: str) -> Dict[str, Any]:
 @app.route("/album/<album_id>", methods=["GET"])
 def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
     album = beets_library.get_single_album(f"id:{album_id}")
-    return {"result": [library_model_to_json(album, album_fields)]}
+    return_value = library_model_to_json(album, album_fields)
+    return_value["tracks"] = [
+        {k: track[k] for k in ["title", "id", "track"]} for track in album.items()
+    ]
+
+    return {"result": [return_value]}
 
 
 @app.route("/album/<album_id>", methods=["POST"])
