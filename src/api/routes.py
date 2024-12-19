@@ -47,7 +47,7 @@ def library_model_to_json(
 @app.route("/tracks/<track_id>", methods=["GET"])
 def get_track(track_id: int) -> Dict[str, Any]:
     track = beets_library.get_item(int(track_id))
-    return {"result": [library_model_to_json(track, track_fields)]}
+    return library_model_to_json(track, track_fields)
 
 
 # Why does this not work if I update the album to Diotima-test?
@@ -96,13 +96,11 @@ def update_track(track_id: int) -> Response:
 
 
 @app.route("/albums/<album_name>", methods=["GET"])
-def query_album(album_name: str) -> Dict[str, Any]:
-    return {
-        "result": [
-            library_model_to_json(album, album_fields)
-            for album in beets_library.get_albums(f"album:{album_name}")
-        ]
-    }
+def query_album(album_name: str) -> List[Dict[str, Any]]:
+    return [
+        library_model_to_json(album, album_fields)
+        for album in beets_library.get_albums(f"album:{album_name}")
+    ]
 
 
 @app.route("/album/<album_id>", methods=["GET"])
@@ -114,7 +112,7 @@ def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
     ]
     return_value["tracks"] = track_info
 
-    return {"result": [return_value]}
+    return return_value
 
 
 @app.route("/album/<album_id>", methods=["POST"])
@@ -126,7 +124,7 @@ def update_album(album_id: int) -> Response:
 
     album_updates["album"] = album_updates["title"]
     del album_updates["title"]
-    album = beets_library.get_single_album(f"id:{album_id}")
+    album = beets_library.get_album(album_id)
     album.update({key: value for key, value in album_updates.items() if key != "id"})
     try:
         album.try_sync(True, True, True)

@@ -1,10 +1,10 @@
 import { Album, Track } from "./types";
-import { SearchResults } from "./types";
+import { ApiResult, LibraryItem } from "./types";
 
-async function _get(url: string): Promise<SearchResults | undefined> {
+async function _get(url: string): Promise<ApiResult | undefined> {
     try {
         const response = await fetch(url);
-        const data = await response.json() as SearchResults;
+        const data = await response.json() as ApiResult;
         return data;
     } catch(error) {
         console.error(error);
@@ -20,29 +20,28 @@ async function _post(url: string, data: Track|Album): Promise<UpdateResponse> {
     });
 };
 
-export async function search(searchType: string, searchInput: string): Promise<SearchResults> {
-    const results = await _get(`http://127.0.0.1:5000/${searchType}/${searchInput}`);
-    return results ?? { result: [] } as SearchResults;
+export async function search(searchType: string, searchInput: string): Promise<LibraryItem[]> {
+    const results = await _get(`http://127.0.0.1:5000/${searchType}/${searchInput}`) as LibraryItem[];
+    return results ?? [] as LibraryItem[];
 };
 
 export async function getTrack (trackId: number): Promise<Track | undefined> {
-    const results = await _get(`http://127.0.0.1:5000/tracks/${trackId}`);
-    if(results?.result && results?.result.length == 1) {
-        return results?.result[0] as Track;
+    const result = await _get(`http://127.0.0.1:5000/tracks/${trackId}`);
+    if(result) {
+        return result as Track;
     }
-    console.error(`More than one track returned for id ${trackId}`);
     return undefined;
 }
 
 export async function getAlbum(albumId: number): Promise<Album | undefined> {
-    const results = await _get(`http://127.0.0.1:5000/album/${albumId}`);
-    if(results?.result && results?.result.length == 1) {
-        return results?.result[0] as Album;
+    const result = await _get(`http://127.0.0.1:5000/album/${albumId}`);
+    if(result) {
+        return result as Album;
     }
-    console.error(`More than one album returned for id ${albumId}`);
     return undefined;
 }
 
+// TODO: Define UpdateResponse type
 interface UpdateResponse {}
 export async function updateTrack(trackId: number, track: Track): Promise<UpdateResponse> {
     return _post(`http://127.0.0.1:5000/tracks/${trackId.toString()}`, track);
