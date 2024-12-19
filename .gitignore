@@ -4,3 +4,4 @@ beetman.egg-info
 venv/
 **node_modules**
 .envrc
+src/api/config.json

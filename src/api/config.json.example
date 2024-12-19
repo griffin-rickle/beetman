@@ -1,0 +1,10 @@
+{
+    "beets": {
+        "library_db_path": "/home/griff/Downloads/test_library_path",
+        "library_directory": "/home/griff/Downloads/test_library_directory",
+        "library_path_format": "$albumartist/($year) - $album/$track $title"
+    },
+    "server": {
+        "database": "sqlite:///site.db"
+    }
+}

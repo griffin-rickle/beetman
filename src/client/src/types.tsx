@@ -1,5 +1,5 @@
 export type SearchType = "tracks" | "albums"
-export type ApiResult = SingleSearchResult | SearchResult
+export type ApiResult = LibraryItem | LibraryItem[]
 
 export interface LibraryItem {
     id: number;

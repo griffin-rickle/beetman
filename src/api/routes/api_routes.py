@@ -1,20 +1,9 @@
-import json
-from io import BytesIO
 from typing import Any, Dict, List, Union
 
 from beets.library import LibModel
-from flask import Flask, Response, request
-from flask_cors import CORS
-from model.lib_wrapper import LibraryWrapper
+from flask import Blueprint, Response, current_app, request
 
-beets_library = LibraryWrapper(
-    "/home/griff/Downloads/test_library_path",
-    "/home/griff/Downloads/test_library_directory",
-)
-
-app = Flask(__name__)
-CORS(app)
-app.secret_key = "7dcbc0cdd9fb2339588460bb3ab7f0241e7cbfbcfe8a679666232d9bf869a975"
+api_routes = Blueprint("api", __name__)
 
 # TODO: Come up with a type that isn't a piece of shit Union[Dict[str, str], str]
 track_fields: List[str] = ["id", "title", "album", "artist", "track", "year"]
@@ -44,23 +33,22 @@ def library_model_to_json(
     return to_return
 
 
-@app.route("/tracks/<track_id>", methods=["GET"])
+@api_routes.route("/tracks/<track_id>", methods=["GET"])
 def get_track(track_id: int) -> Dict[str, Any]:
-    track = beets_library.get_item(int(track_id))
+    track = current_app.config["beets_library"].get_item(int(track_id))
     return library_model_to_json(track, track_fields)
 
 
 # Why does this not work if I update the album to Diotima-test?
-@app.route("/tracks/<track_id>", methods=["POST"])
+@api_routes.route("/tracks/<track_id>", methods=["POST"])
 def update_track(track_id: int) -> Response:
-    try:
-        item_updates = json.load(BytesIO(request.data))
-    except Exception:
-        return Response("An error occurred parsing request body", status=500)
-    track = beets_library.get_item(track_id)
+    item_updates = request.get_json()
+    track = current_app.config["beets_library"].get_item(track_id)
     track.update({key: value for key, value in item_updates.items() if key != "id"})
     # Want the case where album doesn't exist here
-    album_result = beets_library.get_albums(f"album:={track.album}")
+    album_result = current_app.config["beets_library"].get_albums(
+        f"album:={track.album}"
+    )
 
     if len(album_result) > 1:
         return Response(
@@ -72,7 +60,7 @@ def update_track(track_id: int) -> Response:
         # Album moving to new directory
         album = album_result[0]
     else:
-        album = beets_library.add_album([track])
+        album = current_app.config["beets_library"].add_album([track])
 
     track.update({"album_id": album.id})
 
@@ -95,17 +83,19 @@ def update_track(track_id: int) -> Response:
     return Response("track updated successfully", status=200)
 
 
-@app.route("/albums/<album_name>", methods=["GET"])
+@api_routes.route("/albums/<album_name>", methods=["GET"])
 def query_album(album_name: str) -> List[Dict[str, Any]]:
     return [
         library_model_to_json(album, album_fields)
-        for album in beets_library.get_albums(f"album:{album_name}")
+        for album in current_app.config["beets_library"].get_albums(
+            f"album:{album_name}"
+        )
     ]
 
 
-@app.route("/album/<album_id>", methods=["GET"])
+@api_routes.route("/album/<album_id>", methods=["GET"])
 def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
-    album = beets_library.get_album(int(album_id))
+    album = current_app.config["beets_library"].get_album(int(album_id))
     return_value: Dict[str, Any] = library_model_to_json(album, album_fields)
     track_info: List[Dict[str, str]] = [
         {k: track[k] for k in ["title", "id", "track"]} for track in album.items()
@@ -115,16 +105,13 @@ def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
     return return_value
 
 
-@app.route("/album/<album_id>", methods=["POST"])
+@api_routes.route("/album/<album_id>", methods=["POST"])
 def update_album(album_id: int) -> Response:
-    try:
-        album_updates = json.load(BytesIO(request.data))
-    except Exception:
-        return Response("An error occurred parsing request body", 500)
+    album_updates = request.get_json()
 
     album_updates["album"] = album_updates["title"]
     del album_updates["title"]
-    album = beets_library.get_album(album_id)
+    album = current_app.config["beets_library"].get_album(album_id)
     album.update({key: value for key, value in album_updates.items() if key != "id"})
     try:
         album.try_sync(True, True, True)

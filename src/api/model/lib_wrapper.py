@@ -11,8 +11,10 @@ class SearchType(Enum):
 
 
 class LibraryWrapper(Library):  # type: ignore
-    def __init__(self, path: str, directory: str):
-        super().__init__(path=path, directory=directory)
+    def __init__(self, path: str, directory: str, path_format: str):
+        super().__init__(
+            path=path, directory=directory, path_formats=(("default", path_format))
+        )
 
     def multi_query(self, query: str, search_type: SearchType) -> Tuple[LibModel]:
         album = search_type == SearchType.ALBUM
