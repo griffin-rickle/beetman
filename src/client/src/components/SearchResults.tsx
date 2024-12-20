@@ -13,8 +13,6 @@ const SearchResultTable: React.FC<SearchResultsProps> = ({searchType, searchResu
         return <></>
     }
 
-    console.log(searchResults)
-
     // TODO: Fix type errors in the maps
     return (
         <>
