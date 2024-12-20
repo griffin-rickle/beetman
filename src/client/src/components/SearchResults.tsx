@@ -7,9 +7,7 @@ interface SearchResultsProps {
     searchType: SearchType
 }
 
-const SearchResultTable: React.FC<SearchResultsProps> = (props: SearchResultsProps) => {
-    const searchType = props.searchType;
-    const searchResults = props.searchResults;
+const SearchResultTable: React.FC<SearchResultsProps> = ({searchType, searchResults}: SearchResultsProps) => {
     const headers: string[] = CONFIG.fields[searchType];
     if (!searchResults) {
         return <></>
