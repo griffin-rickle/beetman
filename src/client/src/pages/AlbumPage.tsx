@@ -20,9 +20,9 @@ const AlbumPage: React.FC = () => {
         }
     }, []);
 
-    const handleButtonClick = (event) => {
+    const handleButtonClick = (_: React.FormEvent<HTMLElement>) => {
         if(!!albumId && !!albumInfo) {
-            const result = updateAlbum(parseInt(albumId), albumInfo)
+            updateAlbum(parseInt(albumId), albumInfo)
         }
     };
 

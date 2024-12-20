@@ -5,8 +5,9 @@ interface AlbumComponentProps {
     album: Album;
     setAlbumInfo: Function;
 }
+
 const AlbumComponent: React.FC<AlbumComponentProps> = ({album, setAlbumInfo}: AlbumComponentProps) => {
-    const handleValueChange = (event, key) => {
+    const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>, key: string) => {
         const newAlbum = { ...album };
         newAlbum[key] = event.target.value;
         setAlbumInfo(newAlbum);

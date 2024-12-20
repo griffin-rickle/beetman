@@ -19,9 +19,9 @@ const TrackPage: React.FC = () => {
         }
     }, []);
 
-    const handleButtonClick = (event) => {
+    const handleButtonClick = (_: React.FormEvent<HTMLElement>) => {
         if(!!trackId && !!trackInfo) {
-            const result = updateTrack(parseInt(trackId), trackInfo);
+            updateTrack(parseInt(trackId), trackInfo);
         }
     };
 

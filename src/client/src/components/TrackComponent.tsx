@@ -6,7 +6,7 @@ interface TrackComponentProps {
     setTrackInfo: Function;
 }
 const TrackComponent: React.FC<TrackComponentProps> = ({track, setTrackInfo}: TrackComponentProps) => {
-    const handleValueChange = (event, key) => {
+    const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>, key: string) => {
         const newTrack = { ...track };
         newTrack[key] = event.target.value;
         setTrackInfo(newTrack);
