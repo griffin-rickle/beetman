@@ -26,7 +26,7 @@ export async function search(searchType: string, searchInput: string): Promise<L
 };
 
 export async function getTrack (trackId: number): Promise<Track | undefined> {
-    const result = await _get(`http://127.0.0.1:5000/tracks/${trackId}`);
+    const result = await _get(`http://127.0.0.1:5000/track/${trackId}`);
     if(result) {
         return result as Track;
     }
@@ -44,7 +44,7 @@ export async function getAlbum(albumId: number): Promise<Album | undefined> {
 // TODO: Define UpdateResponse type
 interface UpdateResponse {}
 export async function updateTrack(trackId: number, track: Track): Promise<UpdateResponse> {
-    return _post(`http://127.0.0.1:5000/tracks/${trackId.toString()}`, track);
+    return _post(`http://127.0.0.1:5000/track/${trackId.toString()}`, track);
 }
 
 export async function updateAlbum(albumId: number, album: Album): Promise<UpdateResponse> {

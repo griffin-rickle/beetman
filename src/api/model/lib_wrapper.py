@@ -29,5 +29,8 @@ class LibraryWrapper(Library):  # type: ignore
             pass
         return return_values
 
+    def get_tracks(self, query: str) -> Tuple[Item]:
+        return self.multi_query(query, SearchType.TRACK)
+
     def get_albums(self, query: str) -> Tuple[Album]:
         return self.multi_query(query, SearchType.ALBUM)

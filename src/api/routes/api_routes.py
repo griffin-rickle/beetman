@@ -33,14 +33,21 @@ def library_model_to_json(
     return to_return
 
 
-@api_routes.route("/tracks/<track_id>", methods=["GET"])
+@api_routes.route("/tracks/<track_name>", methods=["GET"])
+def query_track(track_name: str) -> List[Dict[str, Any]]:
+    return [
+        library_model_to_json(track, track_fields)
+        for track in current_app.config["beets_library"].get_tracks(f"{track_name}")
+    ]
+
+
+@api_routes.route("/track/<track_id>", methods=["GET"])
 def get_track(track_id: int) -> Dict[str, Any]:
     track = current_app.config["beets_library"].get_item(int(track_id))
     return library_model_to_json(track, track_fields)
 
 
-# Why does this not work if I update the album to Diotima-test?
-@api_routes.route("/tracks/<track_id>", methods=["POST"])
+@api_routes.route("/track/<track_id>", methods=["POST"])
 def update_track(track_id: int) -> Response:
     item_updates = request.get_json()
     track = current_app.config["beets_library"].get_item(track_id)

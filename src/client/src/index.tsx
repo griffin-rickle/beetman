@@ -14,8 +14,8 @@ ReactDOM.createRoot(root).render(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<SearchPage />}/>
-            <Route path="/tracks/:trackId" element={<TrackPage />} />
-            <Route path="/albums/:albumId" element={<AlbumPage />} />
+            <Route path="/track/:trackId" element={<TrackPage />} />
+            <Route path="/album/:albumId" element={<AlbumPage />} />
         </Routes>
     </BrowserRouter>
 );

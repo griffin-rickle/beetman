@@ -40,7 +40,7 @@ const AlbumComponent: React.FC<AlbumComponentProps> = ({album, setAlbumInfo}: Al
                         return (
                             <tr>
                                 <td>{track.track}</td>
-                                <td><a href={`/tracks/${track.id}`}>{track.title}</a></td>
+                                <td><a href={`/track/${track.id}`}>{track.title}</a></td>
                             </tr>
                         )
                     })}

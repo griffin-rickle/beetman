@@ -1,108 +1,52 @@
 import React from 'react';
-import { Album, LibraryItem, SearchResults, SearchType, Track } from '../types';
-import {createColumnHelper, flexRender, getCoreRowModel, Table, useReactTable} from '@tanstack/react-table';
+import { LibraryItem, SearchType } from '../types';
+import CONFIG from '../config';
 
 interface SearchResultsProps {
-    searchType: SearchType;
-    searchResults: SearchResults | undefined;
+    searchResults: LibraryItem[],
+    searchType: SearchType
 }
 
-const getTable = (data: LibraryItem[], searchType: SearchType) => {
-    const columnHelper = createColumnHelper<LibraryItem>();
-    const columns = [
-        columnHelper.accessor('id', {
-            cell: info => info.getValue()
-        }),
-        columnHelper.accessor('artist', {
-            cell: info => info.getValue()
-        }),
-        columnHelper.accessor('title', {
-            cell: info => <a href={`/${searchType}/${info.row.original.id}`}>{info.getValue()}</a>
-        }),
-        columnHelper.accessor('year', {
-            cell: info => info.getValue()
-        }),
-    ]
-    return useReactTable({
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel()
-    });
-}
-//
-//interface LibraryItemProps {
-//    row_id: number;
-//    id: number;
-//    artist: string;
-//    title: string;
-//    year: number;
-//    itemType: SearchType
-//}
-//
-//const LibraryItemRow: React.FC<LibraryItemProps> = (item: LibraryItemProps) => {
-//    const { row_id, id, artist, title, year } = item;
-//    return (
-//        <tr key={row_id}>
-//            <td>{id}</td>
-//            <td>{artist}</td>
-//            <td><a href={`/album/${id}`}>{title}</a></td>
-//            <td>{year}</td>
-//        </tr>
-//    )
-//}
-
-const SearchResultTable: React.FC<SearchResultsProps> = ({ searchType, searchResults }: SearchResultsProps) => {
+const SearchResultTable: React.FC<SearchResultsProps> = (props: SearchResultsProps) => {
+    const searchType = props.searchType;
+    const searchResults = props.searchResults;
+    const headers: string[] = CONFIG.fields[searchType];
     if (!searchResults) {
         return <></>
     }
-    const table: Table<LibraryItem> = getTable(searchResults.result, searchType)
+
+    console.log(searchResults)
+
+    // TODO: Fix type errors in the maps
     return (
         <>
         <div className="p-2">
           <table>
             <thead>
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
+                <tr>
+                    {headers.map((key: string) => {
+                        return <td>{key}</td>
+                    })}
                 </tr>
-              ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map(row => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => (
-                    <td key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+                {searchResults.map((searchResult: LibraryItem) => {
+                    return (
+                        <tr>
+                            {headers.map((key: string) => {
+                                let value;
+                                if (key === 'id') {
+                                    const linkBase = searchType.slice(0, -1);
+                                    value = <a href={`/${linkBase}/${searchResult[key]}`}>{searchResult[key]}</a>
+                                } else {
+                                    value = searchResult[key]
+                                }
+                                return <td>{value}</td>
+                            })}
+                        </tr>
+                    )})
+                }
             </tbody>
-            <tfoot>
-              {table.getFooterGroups().map(footerGroup => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map(header => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </tfoot>
           </table>
           <div className="h-4" />
         </div>
