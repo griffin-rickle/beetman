@@ -7,6 +7,7 @@ from flask_cors import CORS
 
 from api.model import Config, LibraryWrapper
 from api.routes.api_routes import api_routes
+from api.routes.auth_routes import auth_routes
 
 parser = ArgumentParser(
     prog="BeetMan API", description="Web API for Beets Python Library Manager"
@@ -37,6 +38,7 @@ def main() -> None:
     CORS(app)
     app.secret_key = "7dcbcdd9fb23395884bb3ab7241e7cbfbcfe8a679666232d9bf869a975"
     app.register_blueprint(api_routes)
+    app.register_blueprint(auth_routes)
     app.run()
 
 
