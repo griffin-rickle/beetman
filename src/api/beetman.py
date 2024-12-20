@@ -37,7 +37,7 @@ def main() -> None:
     CORS(app)
     app.secret_key = "7dcbcdd9fb23395884bb3ab7241e7cbfbcfe8a679666232d9bf869a975"
     app.register_blueprint(api_routes)
-    app.run(debug=True)
+    app.run()
 
 
 if __name__ == "__main__":

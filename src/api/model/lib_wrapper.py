@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Tuple
+from typing import Optional, Tuple
 
 from beets.library import Album, Item, LibModel, Library
 from beets.ui import UserError, commands
@@ -26,7 +26,7 @@ class LibraryWrapper(Library):  # type: ignore
                 self, query=query, album=album
             )[search_type.value]
         except UserError:
-            pass
+            return [] #type: ignore
         return return_values
 
     def get_tracks(self, query: str) -> Tuple[Item]:
