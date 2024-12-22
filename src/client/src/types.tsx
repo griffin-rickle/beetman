@@ -29,3 +29,8 @@ export interface SingleSearchResult {
 export interface SearchResults {
     results: LibraryItem[]
 }
+
+export interface LoginResponse {
+	error: string | undefined;
+	access_token: string | undefined;
+}

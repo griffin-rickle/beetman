@@ -38,7 +38,7 @@ const AuthProvider = ({ children }: Props) => {
 	const [authStatus, setAuthStatus] = useState(AuthStatus.Loading);
 
 	useEffect(() => {
-		async function getWhoAmI() {
+		async function getIsLoggedIn() {
 			const res = localStorage.getItem("beetman_token")
 			if (res !== "" && res) {
 				setAuthStatus(AuthStatus.SignedIn);
@@ -46,11 +46,12 @@ const AuthProvider = ({ children }: Props) => {
 				setAuthStatus(AuthStatus.SignedOut);
 			}
 		}
-		getWhoAmI().then();
+		getIsLoggedIn().then();
 	}, [setAuthStatus, authStatus]);
 
 	function signIn() {
 		setAuthStatus(AuthStatus.SignedIn);
+		console.log(authStatus);
 	}
 
 	function signOut() {
