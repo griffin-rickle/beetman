@@ -20,6 +20,23 @@ async function _post(url: string, data: Track|Album): Promise<UpdateResponse> {
     });
 };
 
+export async function login(username: string, password: string): Promise<string | undefined> {
+    const result = fetch('http://127.0.0.1:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({'username': username, 'password': password})
+    });
+    console.log("After response declaration");
+    result.then((resolve) => {
+        console.log("%o", resolve.json())
+        return resolve.json();
+    }).catch((error) => {
+        console.log("in catch!");
+        console.log("%o", error)
+    });
+    return undefined;
+}
+
 export async function search(searchType: string, searchInput: string): Promise<LibraryItem[]> {
     const results = await _get(`http://127.0.0.1:5000/${searchType}/${searchInput}`) as LibraryItem[];
     return results ?? [] as LibraryItem[];
