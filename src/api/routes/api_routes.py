@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Union
 
 from beets.library import LibModel
 from flask import Blueprint, Response, current_app, request
+from flask_jwt_extended import jwt_required
 
 api_routes = Blueprint("api", __name__)
 
@@ -34,6 +35,7 @@ def library_model_to_json(
 
 
 @api_routes.route("/tracks/<track_name>", methods=["GET"])
+@jwt_required()  # type: ignore
 def query_track(track_name: str) -> List[Dict[str, Any]]:
     return [
         library_model_to_json(track, track_fields)
@@ -42,12 +44,14 @@ def query_track(track_name: str) -> List[Dict[str, Any]]:
 
 
 @api_routes.route("/track/<track_id>", methods=["GET"])
+@jwt_required()  # type:ignore
 def get_track(track_id: int) -> Dict[str, Any]:
     track = current_app.config["beets_library"].get_item(int(track_id))
     return library_model_to_json(track, track_fields)
 
 
 @api_routes.route("/track/<track_id>", methods=["POST"])
+@jwt_required()  # type:ignore
 def update_track(track_id: int) -> Response:
     item_updates = request.get_json()
     track = current_app.config["beets_library"].get_item(track_id)
@@ -91,6 +95,7 @@ def update_track(track_id: int) -> Response:
 
 
 @api_routes.route("/albums/<album_name>", methods=["GET"])
+@jwt_required()  # type:ignore
 def query_album(album_name: str) -> List[Dict[str, Any]]:
     return [
         library_model_to_json(album, album_fields)
@@ -101,6 +106,7 @@ def query_album(album_name: str) -> List[Dict[str, Any]]:
 
 
 @api_routes.route("/album/<album_id>", methods=["GET"])
+@jwt_required()  # type:ignore
 def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
     album = current_app.config["beets_library"].get_album(int(album_id))
     return_value: Dict[str, Any] = library_model_to_json(album, album_fields)
@@ -113,6 +119,7 @@ def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
 
 
 @api_routes.route("/album/<album_id>", methods=["POST"])
+@jwt_required()  # type:ignore
 def update_album(album_id: int) -> Response:
     album_updates = request.get_json()
 

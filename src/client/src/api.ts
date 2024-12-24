@@ -1,8 +1,9 @@
 import { Album, ApiResult, LibraryItem, LoginResponse, Track } from "./types";
 
 async function _get(url: string): Promise<ApiResult | undefined> {
+    const jwt_token = localStorage.getItem('beetman_token');
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt_token}` }});
         const data = await response.json() as ApiResult;
         return data;
     } catch(error) {
@@ -12,9 +13,10 @@ async function _get(url: string): Promise<ApiResult | undefined> {
 };
 
 async function _post(url: string, data: Track|Album): Promise<UpdateResponse> {
+    const jwt_token = localStorage.getItem('beetman_token');
     return fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt_token}` },
         body: JSON.stringify(data)
     });
 };
