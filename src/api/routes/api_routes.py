@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Union
 
 from beets.library import LibModel
-from flask import Blueprint, Response, current_app, request
+from flask import Blueprint, Response, current_app, jsonify, make_response, request
 from flask_jwt_extended import jwt_required
 
 api_routes = Blueprint("api", __name__)
@@ -36,18 +36,25 @@ def library_model_to_json(
 
 @api_routes.route("/tracks/<track_name>", methods=["GET"])
 @jwt_required()  # type: ignore
-def query_track(track_name: str) -> List[Dict[str, Any]]:
-    return [
-        library_model_to_json(track, track_fields)
-        for track in current_app.config["beets_library"].get_tracks(f"{track_name}")
-    ]
+def query_track(track_name: str) -> Response:
+    return make_response(
+        jsonify(
+            [
+                library_model_to_json(track, track_fields)
+                for track in current_app.config["beets_library"].get_tracks(
+                    f"{track_name}"
+                )
+            ]
+        ),
+        200,
+    )
 
 
 @api_routes.route("/track/<track_id>", methods=["GET"])
 @jwt_required()  # type:ignore
-def get_track(track_id: int) -> Dict[str, Any]:
+def get_track(track_id: int) -> Response:
     track = current_app.config["beets_library"].get_item(int(track_id))
-    return library_model_to_json(track, track_fields)
+    return make_response(jsonify(library_model_to_json(track, track_fields)), 200)
 
 
 @api_routes.route("/track/<track_id>", methods=["POST"])
@@ -91,23 +98,28 @@ def update_track(track_id: int) -> Response:
             status=500,
         )
 
-    return Response("track updated successfully", status=200)
+    return make_response("track updated successfully", 200)
 
 
 @api_routes.route("/albums/<album_name>", methods=["GET"])
 @jwt_required()  # type:ignore
-def query_album(album_name: str) -> List[Dict[str, Any]]:
-    return [
-        library_model_to_json(album, album_fields)
-        for album in current_app.config["beets_library"].get_albums(
-            f"album:{album_name}"
-        )
-    ]
+def query_album(album_name: str) -> Response:
+    return make_response(
+        jsonify(
+            [
+                library_model_to_json(album, album_fields)
+                for album in current_app.config["beets_library"].get_albums(
+                    f"album:{album_name}"
+                )
+            ]
+        ),
+        200,
+    )
 
 
 @api_routes.route("/album/<album_id>", methods=["GET"])
 @jwt_required()  # type:ignore
-def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
+def get_album(album_id: int) -> Response:
     album = current_app.config["beets_library"].get_album(int(album_id))
     return_value: Dict[str, Any] = library_model_to_json(album, album_fields)
     track_info: List[Dict[str, str]] = [
@@ -115,7 +127,7 @@ def get_album(album_id: int) -> Dict[str, List[Dict[str, Any]]]:
     ]
     return_value["tracks"] = track_info
 
-    return return_value
+    return make_response(return_value, 200)
 
 
 @api_routes.route("/album/<album_id>", methods=["POST"])
@@ -125,11 +137,11 @@ def update_album(album_id: int) -> Response:
 
     album_updates["album"] = album_updates["title"]
     del album_updates["title"]
-    album = current_app.config["beets_library"].get_album(album_id)
+    album = current_app.config["beets_library"].get_album(int(album_id))
     album.update({key: value for key, value in album_updates.items() if key != "id"})
     try:
         album.try_sync(True, True, True)
     except Exception:
         return Response(f"failed to write album {album.album} to disk", status=500)
 
-    return Response("Album updated successfully", status=200)
+    return make_response("Album updated successfully", 200)

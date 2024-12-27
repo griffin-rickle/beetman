@@ -15,6 +15,16 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'public')
     },
+    proxy: [
+      {
+        context: ['/auth'],
+        target: 'http://localhost:5000/',
+      },
+      {
+        context: ['/api'],
+        target: 'http://localhost:5000/'
+      }
+    ],
     open: true,
     hot: true,
     liveReload: true,

@@ -15,7 +15,7 @@ class LibraryWrapper(Library):  # type: ignore
         super().__init__(
             path=path,
             directory=directory,
-            path_formats=(("default", path_format),),
+            # path_formats=(("default", path_format),),
         )
 
     def multi_query(self, query: str, search_type: SearchType) -> Tuple[LibModel]:

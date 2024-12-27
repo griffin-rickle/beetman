@@ -1,1 +1,1 @@
-from ._jwt import _jwt
+from .cookie_jwt_manager import CookieJWTManager

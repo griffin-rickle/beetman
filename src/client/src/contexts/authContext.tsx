@@ -1,3 +1,4 @@
+import { token_check } from "../api";
 import React, { useContext, useEffect, useState } from "react";
 
 export enum AuthStatus {
@@ -39,9 +40,9 @@ const AuthProvider = ({ children }: Props) => {
 
 	useEffect(() => {
 		async function getIsLoggedIn() {
-			const res = localStorage.getItem("beetman_token")
+			const res = await token_check();
 			if (res !== "" && res) {
-				setAuthStatus(AuthStatus.SignedIn);
+                setAuthStatus(AuthStatus.SignedIn);
 			} else {
 				setAuthStatus(AuthStatus.SignedOut);
 			}
@@ -51,7 +52,6 @@ const AuthProvider = ({ children }: Props) => {
 
 	function signIn() {
 		setAuthStatus(AuthStatus.SignedIn);
-		console.log(authStatus);
 	}
 
 	function signOut() {

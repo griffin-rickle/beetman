@@ -27,18 +27,14 @@ const LoginPage: React.FC = () => {
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-	e.preventDefault();
-	const accessToken = await login(credentials.username, credentials.password);
-	if (accessToken.error) {
-		setLoginError(accessToken.error);
-	} else if(accessToken.access_token) { 
-		console.log(accessToken);
-		localStorage.setItem("beetman_token", accessToken.access_token);
-		authContext.signIn();
-		window.location.href = "/";
-	} else {
-		console.error("Bad state; no error or access token in login response");
-	}
+	    e.preventDefault();
+	    const loginAttempt = await login(credentials.username, credentials.password);
+	    if (loginAttempt.error) {
+	    	setLoginError(loginAttempt.error);
+	    } else {
+            authContext.signIn();
+            window.location.href = '/';
+	    }
 	};
 
 	return (
@@ -68,7 +64,7 @@ const LoginPage: React.FC = () => {
 				/>
 			</div>
 			<button type="submit">Login</button>
-			{loginError ? <p>There was an error on login</p> : undefined}
+			{loginError ? <p>{loginError}</p> : undefined}
 		</form>
 	</div>
 	);
