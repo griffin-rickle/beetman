@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.scripts]
-beetman="api:main.main"
+beetman="api:beetman.main"
 
 [project.urls]
 Documentation = "https://github.com/griffin-rickle/beetman"
