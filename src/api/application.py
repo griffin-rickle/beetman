@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from flask import Flask
@@ -30,13 +31,14 @@ def create_app(config: Config) -> Flask:
     app.config["JWT_COOKIE_SECURE"] = False
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
-    app.config["SECRET_KEY"] = "123asd"
-    app.config["JWT_SECRET_KEY"] = "123asd"
     # app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+
+    app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
+    app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
 
     CORS(app)
 
-    app.secret_key = "7dcbcdd9fb23395884bb3ab7241e7cbfbcfe8a679666232d9bf869a975"
+    app.secret_key = os.environ["SECRET_KEY"]
 
     db.init_app(app)
     _jwt = CookieJWTManager()
