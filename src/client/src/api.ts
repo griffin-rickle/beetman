@@ -47,11 +47,22 @@ export async function login(username: string, password: string): Promise<LoginRe
 }
 
 export async function token_check(): Promise<string | null> {
-    const result = await _get("/auth/token_check");
-    if(result) {
-        return "success";
+    try {
+        const response = await fetch("/auth/token_check", {
+            headers: {
+                'Content-Type': 'application/json'
+            }, 
+            credentials: 'include',
+        });
+        if (response.status > 299) {
+            console.error(`Error returned from server: ${response.statusText}`)
+            return null;
+        }
+        return "success"
+    } catch(error) {
+        console.error(error);
+        return null;
     }
-    return null;
 }
 
 export async function search(searchType: string, searchInput: string): Promise<LibraryItem[]> {

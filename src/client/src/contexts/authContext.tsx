@@ -41,7 +41,7 @@ const AuthProvider = ({ children }: Props) => {
 	useEffect(() => {
 		async function getIsLoggedIn() {
 			const res = await token_check();
-			if (res !== "" && res) {
+			if (res && res === "success") {
                 setAuthStatus(AuthStatus.SignedIn);
 			} else {
 				setAuthStatus(AuthStatus.SignedOut);
