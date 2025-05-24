@@ -10,10 +10,11 @@ from api._jwt import CookieJWTManager
 from api.model import Config, db
 from api.routes.api_routes import api_routes
 from api.routes.auth_routes import auth_routes
+from api.routes.frontend_routes import frontend_routes
 
 
 def create_app(config: Config) -> Flask:
-    app = Flask("beetman-api")
+    app = Flask("beetman", static_folder="static", static_url_path="")
 
     # Beets specific configuration
     beet_config = config.beets
@@ -50,5 +51,6 @@ def create_app(config: Config) -> Flask:
 
     app.register_blueprint(api_routes, url_prefix="/api")
     app.register_blueprint(auth_routes, url_prefix="/auth")
+    app.register_blueprint(frontend_routes)
 
     return app

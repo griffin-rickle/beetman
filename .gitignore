@@ -6,3 +6,7 @@ venv/
 .envrc
 src/api/config.json
 .env
+src/api/static
+src/client/dist
+.idea
+src/api/instance

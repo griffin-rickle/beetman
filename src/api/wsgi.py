@@ -10,7 +10,7 @@ from api.model import Config
 load_dotenv()
 
 # Load default config path or env-based path
-config_path = os.environ.get("BEETMAN_CONFIG", "src/api/config.json")
+config_path = os.environ.get("BEETMAN_CONFIG", "config.json")
 
 with open(config_path, "r", encoding="utf-8") as f:
     config = Config(**json.load(f))

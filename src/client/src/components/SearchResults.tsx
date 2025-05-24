@@ -1,6 +1,7 @@
 import React from 'react';
 import { LibraryItem, SearchType } from '../types';
 import CONFIG from '../config';
+import { Link } from 'react-router-dom';
 
 interface SearchResultsProps {
     searchResults: LibraryItem[],
@@ -33,7 +34,7 @@ const SearchResultTable: React.FC<SearchResultsProps> = ({searchType, searchResu
                                 let value;
                                 if (key === 'id') {
                                     const linkBase = searchType.slice(0, -1);
-                                    value = <a href={`/${linkBase}/${searchResult[key]}`}>{searchResult[key]}</a>
+                                    value = <Link to={`/${linkBase}/${searchResult[key]}`}>{searchResult[key]}</Link>
                                 } else {
                                     value = searchResult[key]
                                 }
