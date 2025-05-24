@@ -5,12 +5,6 @@ from argparse import ArgumentParser
 from api.application import create_app
 from api.model import Config
 
-parser = ArgumentParser(
-    prog="BeetMan API", description="Web API for Beets Python Library Manager"
-)
-parser.add_argument("config")
-
-
 def get_config(path: str) -> Config:
     with open(path, "r", encoding="utf-8") as f:
         config_json = json.load(f)
@@ -19,6 +13,10 @@ def get_config(path: str) -> Config:
 
 
 def main() -> None:
+    parser = ArgumentParser(
+        prog="BeetMan API", description="Web API for Beets Python Library Manager"
+    )
+    parser.add_argument("config")
     args = parser.parse_args()
     config = get_config(args.config)
 
