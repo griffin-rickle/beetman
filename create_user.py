@@ -2,9 +2,13 @@ import json
 import sys
 from argparse import ArgumentParser
 
+from dotenv import load_dotenv
+
 from api._bcrypt import _bcrypt
 from api.application import create_app
 from api.model import Config, User, db
+
+load_dotenv()
 
 parser = ArgumentParser(
     "BeetMan User MGMT", description="User management for beetman API"

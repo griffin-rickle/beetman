@@ -10,3 +10,4 @@ src/api/static
 src/client/dist
 .idea
 src/api/instance
+instance/site.db
