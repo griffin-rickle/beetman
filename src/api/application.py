@@ -13,8 +13,8 @@ from api.routes.auth_routes import auth_routes
 from api.routes.frontend_routes import frontend_routes
 
 
-def create_app(config: Config) -> Flask:
-    app = Flask("beetman", static_folder="static", static_url_path="")
+def create_app(config: Config, static_folder: str = "static") -> Flask:
+    app = Flask("beetman", static_folder=static_folder, static_url_path="")
 
     # Beets specific configuration
     beet_config = config.beets

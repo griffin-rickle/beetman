@@ -15,4 +15,6 @@ config_path = os.environ.get("BEETMAN_CONFIG", "config.json")
 with open(config_path, "r", encoding="utf-8") as f:
     config = Config(**json.load(f))
 
-app = create_app(config)
+static_folder = os.path.join(os.path.dirname(__file__), "src", "api", "static")
+
+app = create_app(config, static_folder=static_folder)
