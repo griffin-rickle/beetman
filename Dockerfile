@@ -26,7 +26,8 @@ COPY src/api ./src/api
 
 # Install python dependencies
 RUN pip install --upgrade pip \
- && pip install .
+ && pip install . \
+ && pip install requests && pip install pylast
 
 # Copy frontend build output into static directory
 COPY --from=frontend-builder /app/client/dist ./src/api/static
